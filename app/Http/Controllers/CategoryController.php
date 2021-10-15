@@ -14,7 +14,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //
+        $categories = Category::all();
+        return view('category.index', compact('categories'));
     }
 
     /**
@@ -24,7 +25,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        //
+        return view('category.create');
     }
 
     /**
@@ -35,7 +36,17 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+        ]);
+
+        $category = new Category;
+        $category->name = $request->name;
+        $category->save();
+
+        session()->flash('status', _('Category Created'));
+
+        return redirect()->route('categories.show', $category);
     }
 
     /**
@@ -46,7 +57,7 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        //
+        return view('category.show', compact('category'));
     }
 
     /**
@@ -57,7 +68,7 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        //
+        return view('category.edit', compact('category'));
     }
 
     /**
@@ -69,7 +80,15 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+        ]);
+
+        $category->name = $request->name;
+        $category->save();
+
+        session()->flash('status', _('Category Updated!!'));
+        return redirect()->route('categories.show', $category);
     }
 
     /**
@@ -80,6 +99,10 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        //
+        $category->delete();
+
+        session()->flash('status', _('Category Deleted!!'));
+
+        return redirect()->route('categories.index');
     }
 }
