@@ -28,11 +28,17 @@
                         </div>
                         <div class="form-group">
                            <label for="inpTitle"> {{ __('Post Title') }} </label>
-                           <input type="text"  name="title" class="form-control" id="inpTitle">
+                           <input type="text"  name="title" class="form-control" id="inpTitle" value="{{ old('title') }}">
                         </div>
                         <div class="form-group">
                             <label for="txtContent">{{ __('Post Content') }}</label>
-                            <textarea name="content" class="form-control" id="txtContent"></textarea>
+                            <textarea name="content" class="form-control" id="txtContent">{{ old('content') }}</textarea>
+                        </div>
+                        <div class="form-group">
+                           <label for="inpTags"> {{ __('Post Tags') }} </label>
+                           <input type="text"  name="tags" class="form-control" id="inpTags" value="{{ old('tags') }}"
+                            aria-describedby="tagsHelp">
+                            <small id="tagsHelp" class="form-text text-muted">{{ __('Seperate with commas.') }}</small>
                         </div>
                         <button type="submit" class="btn btn-primary">{{ __('Create Post') }}</button>
                     </form>

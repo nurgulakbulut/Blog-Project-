@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Post;
+use App\Models\Tag;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
@@ -56,6 +57,7 @@ class PostController extends Controller
             'category_id' => 'required|numeric|exists:categories,id',
             'title' => 'required',
             'content' => 'required',
+            'tags' => 'nullable|string',
         ]);
 
         $post = new Post;
@@ -65,6 +67,21 @@ class PostController extends Controller
         $post->content = $request->content;
         $post->save();
 
+        // $tagString = 'yazılım';
+        // $tag = Tag::where('name', $tagString)->get();
+        // $post->tags()->attach($tag->id);
+
+        // Post::create($request->validated());
+
+        if ($request->tags) {
+            $tagsToAttach = array_unique(array_map('trim', explode(',', $request->tags)));
+            foreach ($tagsToAttach as $tagName) {
+                $tag = Tag::firstOrCreate([
+                    'name' => $tagName,
+                ]);
+                $post->tags()->attach($tag->id);
+            }
+        }
         session()->flash('status', __('Post Created!'));
 
         return redirect()->route('posts.show', $post);
