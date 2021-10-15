@@ -8,6 +8,20 @@ use Illuminate\Http\Request;
 class CategoryController extends Controller
 {
     /**
+     * Instantiate a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth')->except('index', 'show');
+        //$this->middleware('can:update,post')->only('edit', 'update');
+        //$this->middleware('can:delete,post')->only('destroy');
+        // $this->middleware('log')->only('index');
+        // $this->middleware('subscribed')->except('store');
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -44,7 +58,7 @@ class CategoryController extends Controller
         $category->name = $request->name;
         $category->save();
 
-        session()->flash('status', _('Category Created'));
+        session()->flash('status', __('Category Created'));
 
         return redirect()->route('categories.show', $category);
     }
@@ -87,7 +101,7 @@ class CategoryController extends Controller
         $category->name = $request->name;
         $category->save();
 
-        session()->flash('status', _('Category Updated!!'));
+        session()->flash('status', __('Category Updated!!'));
         return redirect()->route('categories.show', $category);
     }
 
@@ -101,7 +115,7 @@ class CategoryController extends Controller
     {
         $category->delete();
 
-        session()->flash('status', _('Category Deleted!!'));
+        session()->flash('status', __('Category Deleted!!'));
 
         return redirect()->route('categories.index');
     }

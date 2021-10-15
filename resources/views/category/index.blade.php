@@ -7,7 +7,9 @@
             <div class="card">
                 <div class="card-header">
                     {{ __('Categories') }}
-                    <a href="  {{ route('categories.create') }} " class="btn btn-sm btn-primary"> {{ _('New Category')}} </a>
+                    @auth
+                    <a href="  {{ route('categories.create') }} " class="btn btn-sm btn-primary"> {{ __('New Category')}} </a>
+                    @endauth
                 </div>
 
                 <div class="card-body">

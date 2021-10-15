@@ -2,11 +2,26 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Post;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
+    /**
+     * Instantiate a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth')->except('index', 'show');
+        //$this->middleware('can:update,post')->only('edit', 'update');
+        //$this->middleware('can:delete,post')->only('destroy');
+        // $this->middleware('log')->only('index');
+        // $this->middleware('subscribed')->except('store');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +29,8 @@ class PostController extends Controller
      */
     public function index()
     {
-        //
+        $posts = Post::with(['user', 'category'])->get();
+        return view('post.index', compact('posts'));
     }
 
     /**
@@ -24,7 +40,8 @@ class PostController extends Controller
      */
     public function create()
     {
-        //
+        $categories = Category::all();
+        return view('post.create', compact('categories'));
     }
 
     /**
@@ -35,7 +52,22 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'category_id' => 'required|numeric|exists:categories,id',
+            'title' => 'required',
+            'content' => 'required',
+        ]);
+
+        $post = new Post;
+        $post->user_id = $request->user()->id;
+        $post->category_id = $request->category_id;
+        $post->title = $request->title;
+        $post->content = $request->content;
+        $post->save();
+
+        session()->flash('status', __('Post Created!'));
+
+        return redirect()->route('posts.show', $post);
     }
 
     /**
@@ -44,9 +76,10 @@ class PostController extends Controller
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function show(Post $post)
+    public function show($post)
     {
-        //
+        $post = Post::with(['user', 'category', 'tags'])->findOrFail($post);
+        return view('post.show', compact('post'));
     }
 
     /**
@@ -57,7 +90,8 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        //
+        $categories = Category::all();
+        return view('post.edit', compact('post', 'categories'));
     }
 
     /**
@@ -69,7 +103,22 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
-        //
+        $request->validate([
+            'category_id' => 'required|numeric|exists:categories,id',
+            'title' => 'required',
+            'content' => 'required',
+        ]);
+
+        $post->user_id = $request->user()->id;
+        $post->category_id = $request->category_id;
+        $post->title = $request->title;
+        $post->content = $request->content;
+        $post->save();
+
+        session()->flash('status', __('Post Updated!'));
+
+        return redirect()->route('posts.show', $post);
+
     }
 
     /**
@@ -80,6 +129,10 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+        $post->delete();
+
+        session()->flash('status', __('Post Deleted'));
+
+        return redirect()->route('posts.index');
     }
 }

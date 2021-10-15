@@ -6,8 +6,10 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">
-                    {{ __('New Category') }}
-
+                    {{ __('Posts') }}
+                    @auth
+                    <a href="  {{ route('posts.create') }} " class="btn btn-sm btn-primary"> {{ __('New Post')}} </a>
+                    @endauth
                 </div>
 
                 <div class="card-body">
@@ -16,14 +18,11 @@
                             {{ session('status') }}
                         </div>
                     @endif
-                     <form action="{{ route('categories.store') }}" method="POST">
-                         @csrf
-                        <div class="form-group">
-                           <label for="inpName"> {{ __('Category Name') }} </label>
-                           <input type="text"  name="name" class="form-control" id="inpName">
-                        </div>
-                        <button type="submit" class="btn btn-primary">{{ __('Create Category') }}</button>
-                    </form>
+                 @foreach($posts as $post)
+                    <a href="{{ route('posts.show',$post)}} ">
+                        {{ $post->title }}
+                    </a><br>
+                 @endforeach
                 </div>
             </div>
         </div>

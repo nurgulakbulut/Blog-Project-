@@ -20,17 +20,17 @@
                          @csrf
                          @method('PUT')
                         <div class="form-group">
-                           <label for="inpName"> {{ _('Category Name') }} </label>
+                           <label for="inpName"> {{ __('Category Name') }} </label>
                            <input type="text"  name="name" class="form-control" id="inpName"
                                   value="{{ $category->name }}">
                         </div>
-                        <button type="submit" class="btn btn-primary">{{ _('Update Category') }}</button>
+                        <button type="submit" class="btn btn-primary">{{ __('Update Category') }}</button>
                     </form>
                     <hr>
                     <form action="{{ route('categories.destroy', $category) }}" method="POST">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="btn btn-danger"> {{ _('Delete Category') }} </button>
+                        <button type="submit" class="btn btn-danger"> {{ __('Delete Category') }} </button>
                     </form>
                 </div>
             </div>
