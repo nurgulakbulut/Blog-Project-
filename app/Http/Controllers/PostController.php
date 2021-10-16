@@ -28,10 +28,19 @@ class PostController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $posts = Post::with(['user', 'category'])->get();
+        $postsQuery = Post::with(['user', 'category'])->latest();
+        if ($request->query('category')) {
+            $postsQuery->where('category_id', (int) $request->query('category'));
+        }
+
+        if ($request->query('user')) {
+            $postsQuery->where('user_id', (int) $request->query('user'));
+        }
+        $posts = $postsQuery->paginate(10)->withQueryString();
         return view('post.index', compact('posts'));
+
     }
 
     /**
