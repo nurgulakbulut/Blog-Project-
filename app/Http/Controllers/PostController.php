@@ -17,10 +17,13 @@ class PostController extends Controller
     public function __construct()
     {
         $this->middleware('auth')->except('index', 'show');
+        $this->authorizeResource(Post::class, 'post');
+
         //$this->middleware('can:update,post')->only('edit', 'update');
         //$this->middleware('can:delete,post')->only('destroy');
         // $this->middleware('log')->only('index');
         // $this->middleware('subscribed')->except('store');
+
     }
 
     /**
@@ -102,9 +105,9 @@ class PostController extends Controller
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function show($post)
+    public function show(Post $post)
     {
-        $post = Post::with(['user', 'category', 'tags'])->findOrFail($post);
+        // $post = Post::with(['user', 'category', 'tags'])->findOrFail($post->id);
         return view('post.show', compact('post'));
     }
 
