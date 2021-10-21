@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\PostController;
+use Cmfcmf\OpenWeatherMap;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,3 +27,10 @@ Route::resource('categories', CategoryController::class);
 Route::resource('posts', PostController::class);
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::get('owm', function (OpenWeatherMap $owm) {
+
+    $weather = $owm->getWeather('Istanbul', 'metric', 'tr');
+    dd($weather);
+
+});
