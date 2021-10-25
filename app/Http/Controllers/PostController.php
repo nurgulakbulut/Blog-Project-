@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\PostCreated;
 use App\Models\Category;
 use App\Models\Post;
 use Illuminate\Http\Request;
@@ -90,7 +89,7 @@ class PostController extends Controller
 
         // Mail::to($request->user())->send(new PostCreated($post));
 
-        PostCreated::dispatch($post);
+        // PostCreated::dispatch($post);
 
         return redirect()->route('posts.show', $post);
     }
