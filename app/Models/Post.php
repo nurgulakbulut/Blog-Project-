@@ -23,4 +23,18 @@ class Post extends Model
     {
         return $this->belongsToMany(Tag::class);
     }
+
+    public function setTags($tagString)
+    {
+        if ($tagString) {
+            $tagsToAttach = array_unique(array_map('trim', explode(',', $tagString)));
+            foreach ($tagsToAttach as $tagName) {
+                $tag = Tag::firstOrCreate([
+                    'name' => $tagName,
+                ]);
+                $this->tags()->attach($tag->id);
+            }
+        }
+
+    }
 }

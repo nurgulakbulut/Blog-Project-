@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\PostCreated;
 use App\Models\Category;
 use App\Models\Post;
-use App\Models\Tag;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class PostController extends Controller
 {
@@ -85,16 +86,10 @@ class PostController extends Controller
 
         // Post::create($request->validated());
 
-        if ($request->tags) {
-            $tagsToAttach = array_unique(array_map('trim', explode(',', $request->tags)));
-            foreach ($tagsToAttach as $tagName) {
-                $tag = Tag::firstOrCreate([
-                    'name' => $tagName,
-                ]);
-                $post->tags()->attach($tag->id);
-            }
-        }
+        $post->setTags($request->tags);
         session()->flash('status', __('Post Created!'));
+
+        Mail::to($request->user())->send(new PostCreated($post));
 
         return redirect()->route('posts.show', $post);
     }
