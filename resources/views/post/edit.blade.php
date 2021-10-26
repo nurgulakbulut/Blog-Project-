@@ -39,7 +39,7 @@
                         </div>
                         <button type="submit" class="btn btn-primary">{{ __('Update Post') }}</button>
                     </form>
-                    can('delete', $post)
+                    @can('delete', $post)
                     <hr>
                     <form action="{{ route('posts.destroy', $post) }}" method="POST">
                         @csrf

@@ -14,7 +14,9 @@ class CategoryController extends Controller
      */
     public function __construct()
     {
-        $this->middleware(['auth', 'admin'])->except('index', 'show');
+        $this->middleware(['auth'])->except('index', 'show');
+        $this->middleware(['admin'])->except('index', 'show', 'follow', 'unfollow');
+
         //$this->middleware('can:update,post')->only('edit', 'update');
         //$this->middleware('can:delete,post')->only('destroy');
         // $this->middleware('log')->only('index');
@@ -118,5 +120,18 @@ class CategoryController extends Controller
         session()->flash('status', __('Category Deleted!!'));
 
         return redirect()->route('categories.index');
+    }
+
+    public function follow(Category $category, Request $request)
+    {
+        $category->followers()->attach($request->user()->id);
+        return redirect()->route('categories.show', $category);
+    }
+
+    public function unfollow(Category $category, Request $request)
+    {
+        $category->followers()->detach($request->user()->id);
+        return redirect()->route('categories.show', $category);
+
     }
 }

@@ -9,6 +9,11 @@
                     {{ $category->name }}
                     @auth
                     <a href="  {{ route('categories.edit', $category) }} " class="btn btn-sm btn-warning"> {{ __('Edit Category')}} </a>
+                    @if($category->isFollowedBy(Auth::id()))
+                    <a href="  {{ route('categories.unfollow', $category) }} " class="btn btn-sm btn-outline-success"> {{ __('UnFollow Category')}} </a>
+                    @else
+                    <a href="  {{ route('categories.follow', $category) }} " class="btn btn-sm btn-success"> {{ __('Follow Category')}} </a>
+                    @endif
                     @endauth
                 </div>
 
